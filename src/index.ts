@@ -92,7 +92,6 @@ const createPost = async (title: string): Promise<void> => {
   }
 };
 
-
 interface Options {
   archive: true;
   basePath: string;
@@ -202,7 +201,7 @@ export const run = async (): Promise<void> => {
       const html = await engine.render(tpl, props);
       assertIsDefined(entry.link);
       const outDir = path.join(publicDir, entry.link);
-      const exists = await fse.pathExists(outDir)
+      const exists = await fse.pathExists(outDir);
       if (!exists) await fse.mkdirp(outDir);
       await fsp.writeFile(path.join(outDir, 'index.html'), html);
     };
@@ -232,7 +231,7 @@ export const run = async (): Promise<void> => {
       const tpl = engine.parse(layout);
       const html = await engine.render(tpl, props);
       await fsp.writeFile(path.join(publicDir, 'index.html'), html);
-    }
+    };
 
     if (pos === 0) {
       buildIndex();
