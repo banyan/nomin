@@ -19,7 +19,8 @@
     "build": "tsc -p tsconfig.release.json",
     "lint": "eslint . --ext .ts",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "fmt": "prettier --write \"src/**/*.{js,ts}\" \"bin/run\""
   },
   "dependencies": {
     "date-fns": "^2.12.0",
