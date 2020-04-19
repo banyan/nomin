@@ -1,20 +1,42 @@
 {
-  "name": "seikatsu",
+  "name": "nomin",
   "version": "0.0.1",
-  "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
+  "author": "Kohei Hasegawa",
+  "license": "Apache-2.0",
   "engines": {
     "node": ">= 12.13 <13"
   },
+  "bin": {
+    "nomin": "./bin/run"
+  },
+  "files": [
+    "/bin",
+    "/lib"
+  ],
+  "main": "dist/index.js",
   "scripts": {
-    "clean": "rimraf coverage build tmp",
+    "clearn": "rm -rf dist",
     "build": "tsc -p tsconfig.release.json",
-    "build:watch": "tsc -w -p tsconfig.release.json",
-    "lint": "eslint . --ext .ts,.tsx",
-    "test": "jest --coverage",
+    "lint": "eslint . --ext .ts",
+    "test": "jest",
     "test:watch": "jest --watch"
   },
+  "dependencies": {
+    "date-fns": "^2.12.0",
+    "fs-extra": "^9.0.0",
+    "highlight.js": "^9.18.1",
+    "js-yaml": "^3.13.1",
+    "liquidjs": "^9.11.10",
+    "marked": "^0.8.2",
+    "meow": "^6.1.0",
+    "tslib": "~1.10.0"
+  },
   "devDependencies": {
+    "@types/fs-extra": "^8.1.0",
+    "@types/highlight.js": "^9.12.3",
     "@types/jest": "~25.1.2",
+    "@types/js-yaml": "^3.12.3",
+    "@types/marked": "^0.7.4",
     "@types/node": "~12.12.27",
     "@typescript-eslint/eslint-plugin": "~2.19.2",
     "@typescript-eslint/parser": "~2.19.2",
@@ -22,15 +44,9 @@
     "eslint-config-prettier": "~6.10.0",
     "eslint-plugin-jest": "~23.7.0",
     "jest": "~25.1.0",
-    "prettier": "~1.19.1",
-    "rimraf": "~3.0.2",
+    "prettier": "^2.0.4",
     "ts-jest": "~25.2.0",
-    "tsutils": "~3.17.0",
-    "typescript": "~3.8.2"
-  },
-  "author": "Jakub Synowiec <github@jakubsynowiec.info>",
-  "license": "Apache-2.0",
-  "dependencies": {
-    "tslib": "~1.10.0"
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3"
   }
 }
