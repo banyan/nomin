@@ -4,7 +4,7 @@
   "author": "Kohei Hasegawa",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">= 12.13 <13"
+    "node": ">= 12 <13"
   },
   "bin": {
     "nomin": "./bin/run"
