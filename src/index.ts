@@ -85,7 +85,7 @@ const createPost = async (title: string): Promise<void> => {
     const time = new Date();
     await fsp.writeFile(
       `${postDir}/${format(time, 'yyyy-MM-dd')}-${title}.md`,
-      `---\ntitle: ${title}\ndate: ${time}\n---`,
+      `---\ntitle: ${title}\ndate: ${formatRFC3339(time)}\n---`,
     );
   } catch (error) {
     console.error(error);
