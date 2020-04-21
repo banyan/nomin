@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import fse from 'fs-extra';
 
-import { compareAsc, format } from 'date-fns';
+import { compareAsc, format, formatRFC3339 } from 'date-fns';
 import { Liquid } from 'liquidjs';
 import hljs from 'highlight.js';
 import marked from 'marked';
@@ -213,7 +213,7 @@ export const run = async (): Promise<void> => {
       feeds.push({
         title: data.title,
         content,
-        date: entry.date.toISOString(), // TODO: fix here to be compatible
+        date: formatRFC3339(entry.date),
         link: entry.link,
       });
     }
@@ -225,6 +225,7 @@ export const run = async (): Promise<void> => {
         link: entry.link,
       });
     }
+
     const buildIndex = async (): Promise<void> => {
       props.index = true;
       const layout = fs.readFileSync(path.join(layoutDir, 'post.html'), 'utf8');
