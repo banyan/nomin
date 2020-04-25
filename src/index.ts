@@ -11,6 +11,8 @@ import yaml from 'js-yaml';
 import meow from 'meow';
 
 import { assertIsDefined } from './utils';
+import { createPost } from './commands/new'
+import { paths } from '~/paths'
 
 const fsp = fs.promises;
 
@@ -38,11 +40,6 @@ interface Archive {
   formattedDate: string;
   link: string;
 }
-
-const postDir = path.resolve('./posts');
-const layoutDir = path.resolve('./layouts');
-const publicDir = path.resolve('./public');
-const staticDir = path.resolve('./static');
 
 const engine = new Liquid();
 
@@ -80,18 +77,6 @@ const cli = meow(
   },
 );
 
-const createPost = async (title: string): Promise<void> => {
-  try {
-    const time = new Date();
-    await fsp.writeFile(
-      `${postDir}/${format(time, 'yyyy-MM-dd')}-${title}.md`,
-      `---\ntitle: ${title}\ndate: ${formatRFC3339(time)}\n---`,
-    );
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 interface Options {
   archive: true;
   basePath: string;
@@ -101,7 +86,7 @@ interface Options {
 const options = (cli.flags as unknown) as Options;
 
 const parse = (entry: Entry): [string, Data] => {
-  const data = fs.readFileSync(path.join(postDir, entry.path), 'utf8');
+  const data = fs.readFileSync(path.join(paths.posts, entry.path), 'utf8');
   const m = data.match(/^---([\s\S]*?)---([\s\S]*)$/m);
   if (!m) throw new Error(`parse failed: ${data}, ${m}`);
   return [m[2], yaml.load(m[1])];
@@ -129,10 +114,10 @@ export const run = async (): Promise<void> => {
   }
 
   let entries: Entry[] = [];
-  const postPaths = await fsp.readdir(postDir);
+  const postPaths = await fsp.readdir(paths.posts);
 
   for (const postPath of postPaths) {
-    const fileStream = fs.createReadStream(path.join(postDir, postPath));
+    const fileStream = fs.createReadStream(path.join(paths.posts, postPath));
     const rl = readline.createInterface({
       input: fileStream,
       crlfDelay: Infinity,
@@ -196,11 +181,11 @@ export const run = async (): Promise<void> => {
     };
 
     const buildPost = async (entry: Entry): Promise<void> => {
-      const layout = fs.readFileSync(path.join(layoutDir, 'post.html'), 'utf8');
+      const layout = fs.readFileSync(path.join(paths.layouts, 'post.html'), 'utf8');
       const tpl = engine.parse(layout);
       const html = await engine.render(tpl, props);
       assertIsDefined(entry.link);
-      const outDir = path.join(publicDir, entry.link);
+      const outDir = path.join(paths.public, entry.link);
       const exists = await fse.pathExists(outDir);
       if (!exists) await fse.mkdirp(outDir);
       await fsp.writeFile(path.join(outDir, 'index.html'), html);
@@ -228,10 +213,10 @@ export const run = async (): Promise<void> => {
 
     const buildIndex = async (): Promise<void> => {
       props.index = true;
-      const layout = fs.readFileSync(path.join(layoutDir, 'post.html'), 'utf8');
+      const layout = fs.readFileSync(path.join(paths.layouts, 'post.html'), 'utf8');
       const tpl = engine.parse(layout);
       const html = await engine.render(tpl, props);
-      await fsp.writeFile(path.join(publicDir, 'index.html'), html);
+      await fsp.writeFile(path.join(paths.public, 'index.html'), html);
     };
 
     if (pos === 0) {
@@ -242,26 +227,26 @@ export const run = async (): Promise<void> => {
   }
 
   const buildFeed = async (feeds: Feed[]): Promise<void> => {
-    const layout = fs.readFileSync(path.join(layoutDir, 'atom.xml'), 'utf8');
+    const layout = fs.readFileSync(path.join(paths.layouts, 'atom.xml'), 'utf8');
     const tpl = engine.parse(layout);
     const html = await engine.render(tpl, { feeds });
-    await fsp.writeFile(path.join(publicDir, 'atom.xml'), html);
+    await fsp.writeFile(path.join(paths.public, 'atom.xml'), html);
   };
   buildFeed(feeds);
 
   const buildArchive = async (archives: Archive[]): Promise<void> => {
     const layout = fs.readFileSync(
-      path.join(layoutDir, 'archive.html'),
+      path.join(paths.layouts, 'archive.html'),
       'utf8',
     );
     const tpl = engine.parse(layout);
     const html = await engine.render(tpl, { archives });
-    const archiveDir = path.join(publicDir, 'archive');
+    const archiveDir = path.join(paths.public, 'archive');
     await fse.mkdirp(archiveDir);
     await fsp.writeFile(path.join(archiveDir, 'index.html'), html);
   };
   buildArchive(archives);
 
   // copy static
-  fse.copySync(staticDir, publicDir);
+  fse.copySync(paths.static, paths.public);
 };
