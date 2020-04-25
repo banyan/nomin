@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 
 const srcDirectory = fs.realpathSync(process.cwd());
-const resolvePath = (relativePath: string) => path.resolve(srcDirectory, relativePath);
+const resolvePath = (relativePath: string) =>
+  path.resolve(srcDirectory, relativePath);
 
 export const paths = {
   posts: resolvePath('./posts'),
@@ -10,4 +11,3 @@ export const paths = {
   public: resolvePath('./public'),
   static: resolvePath('./static'),
 };
-

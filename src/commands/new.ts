@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import { format, formatRFC3339 } from 'date-fns';
 

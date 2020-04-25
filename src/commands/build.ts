@@ -71,8 +71,7 @@ export const build = async () => {
     const date = format(entry.date, 'yyyy/MM/dd');
     if (preEntryDate === date) {
       cnt = cnt + 1;
-    }
-    else {
+    } else {
       cnt = 1;
     }
     entry.cnt = cnt;
@@ -104,14 +103,16 @@ export const build = async () => {
       prevPage: prevPage,
     };
     const buildPost = async (entry: Entry): Promise<void> => {
-      const layout = fs.readFileSync(path.join(paths.layouts, 'post.html'), 'utf8');
+      const layout = fs.readFileSync(
+        path.join(paths.layouts, 'post.html'),
+        'utf8',
+      );
       const tpl = engine.parse(layout);
       const html = await engine.render(tpl, props);
       assertIsDefined(entry.link);
       const outDir = path.join(paths.public, entry.link);
       const exists = await fse.pathExists(outDir);
-      if (!exists)
-        await fse.mkdirp(outDir);
+      if (!exists) await fse.mkdirp(outDir);
       await fsp.writeFile(path.join(outDir, 'index.html'), html);
     };
     buildPost(entry);
@@ -133,7 +134,10 @@ export const build = async () => {
     }
     const buildIndex = async (): Promise<void> => {
       props.index = true;
-      const layout = fs.readFileSync(path.join(paths.layouts, 'post.html'), 'utf8');
+      const layout = fs.readFileSync(
+        path.join(paths.layouts, 'post.html'),
+        'utf8',
+      );
       const tpl = engine.parse(layout);
       const html = await engine.render(tpl, props);
       await fsp.writeFile(path.join(paths.public, 'index.html'), html);
@@ -145,7 +149,10 @@ export const build = async () => {
   }
 
   const buildFeed = async (feeds: Feed[]): Promise<void> => {
-    const layout = fs.readFileSync(path.join(paths.layouts, 'atom.xml'), 'utf8');
+    const layout = fs.readFileSync(
+      path.join(paths.layouts, 'atom.xml'),
+      'utf8',
+    );
     const tpl = engine.parse(layout);
     const html = await engine.render(tpl, { feeds });
     await fsp.writeFile(path.join(paths.public, 'atom.xml'), html);
@@ -154,7 +161,10 @@ export const build = async () => {
   buildFeed(feeds);
 
   const buildArchive = async (archives: Archive[]): Promise<void> => {
-    const layout = fs.readFileSync(path.join(paths.layouts, 'archive.html'), 'utf8');
+    const layout = fs.readFileSync(
+      path.join(paths.layouts, 'archive.html'),
+      'utf8',
+    );
     const tpl = engine.parse(layout);
     const html = await engine.render(tpl, { archives });
     const archiveDir = path.join(paths.public, 'archive');

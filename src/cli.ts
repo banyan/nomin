@@ -1,6 +1,7 @@
 import meow from 'meow';
 
-export const cli = meow(`
+export const cli = meow(
+  `
   nomin
 
   static site generator.
@@ -18,23 +19,25 @@ export const cli = meow(`
 
   - Create new post
     $ nomin new title
-`, {
-  inferType: true,
-  flags: {
-    archive: {
-      type: 'boolean',
-      default: true,
-    },
-    base_path: {
-      type: 'string',
-      default: '/',
-    },
-    feed_size: {
-      type: 'number',
-      default: 5,
+`,
+  {
+    inferType: true,
+    flags: {
+      archive: {
+        type: 'boolean',
+        default: true,
+      },
+      base_path: {
+        type: 'string',
+        default: '/',
+      },
+      feed_size: {
+        type: 'number',
+        default: 5,
+      },
     },
   },
-});
+);
 
 interface Options {
   archive: true;
