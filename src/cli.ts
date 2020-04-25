@@ -2,15 +2,10 @@ import meow from 'meow';
 
 export const cli = meow(
   `
-  nomin
-
-  static site generator.
-  More information: <https://github.com/banyan/nomin>.
-
-  Examples
+  nomin [command] <options>
 
   - Build assets
-    $ nomin
+    $ nomin <options>
 
 	  Options
 	    --base_path, Serve site from a given path. default is '/'
