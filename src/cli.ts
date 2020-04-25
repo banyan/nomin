@@ -4,18 +4,26 @@ import meow from 'meow';
 
 export const cli = meow(
   `
-  nomin [command] <options>
+  nomin - static site generator
 
-  - Build assets
-    $ nomin <options>
+  USAGE
 
-	  Options
-	    --base_path, Serve site from a given path. default is '/'
-	    --archive, Generate archive pages, default is true
-	    --feed_size, Set feed size, default is 5
+      $ nomin --help
+      $ nomin --version
+      $ nomin
+      $ nomin new [title]
 
-  - Create new post
-    $ nomin new title
+  OPTIONS
+
+      -h, --help                          Shows this help message
+
+      -v, --version                       Displays the current version of nomin
+
+      --base-path                         Specify a path on where to serve (default is '/')
+
+      --archive                           Generate archive pages, default is true
+
+      --feed_size                         Set feed size, default is 5
 `,
   {
     inferType: true,
