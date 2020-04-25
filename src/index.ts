@@ -4,8 +4,6 @@ import fse from 'fs-extra';
 
 import { compareAsc, format, formatRFC3339 } from 'date-fns';
 import { Liquid } from 'liquidjs';
-import hljs from 'highlight.js';
-import marked from 'marked';
 import readline from 'readline';
 import yaml from 'js-yaml';
 import meow from 'meow';
@@ -13,6 +11,7 @@ import meow from 'meow';
 import { assertIsDefined } from './assert';
 import { createPost } from './commands/new'
 import { paths } from '~/paths'
+import { marked } from '~/marked'
 
 const fsp = fs.promises;
 
@@ -91,21 +90,6 @@ const parse = (entry: Entry): [string, Data] => {
   if (!m) throw new Error(`parse failed: ${data}, ${m}`);
   return [m[2], yaml.load(m[1])];
 };
-
-marked.setOptions({
-  renderer: new marked.Renderer(),
-  highlight: function (code, language) {
-    const validLanguage = hljs.getLanguage(language) ? language : 'plaintext';
-    return hljs.highlight(validLanguage, code).value;
-  },
-  pedantic: false,
-  gfm: true,
-  breaks: false,
-  sanitize: false,
-  smartLists: true,
-  smartypants: false,
-  xhtml: false,
-});
 
 export const run = async (): Promise<void> => {
   if (cli.input[0] === 'new' && cli.input.length === 2) {
