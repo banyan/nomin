@@ -10,7 +10,7 @@ if (dev) {
   const tsconfigModule = require(tsconfigPath);
   require('tsconfig-paths').register({
     baseUrl: path.dirname(tsconfigPath),
-    paths: tsconfigModule.compilerOptions.paths
+    paths: tsconfigModule.compilerOptions.paths,
   });
 }
 
