@@ -10,7 +10,7 @@ import readline from 'readline';
 import yaml from 'js-yaml';
 import meow from 'meow';
 
-import { assertIsDefined } from './utils';
+import { assertIsDefined } from './assert';
 import { createPost } from './commands/new'
 import { paths } from '~/paths'
 
