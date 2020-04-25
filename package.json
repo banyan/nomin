@@ -58,7 +58,6 @@
   "jest": {
     "setupFiles": [
       "jest-date-mock"
-    ],
-    "globalSetup": "<rootDir>/jest.globalSetup.js"
+    ]
   }
 }
