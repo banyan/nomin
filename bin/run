@@ -2,11 +2,16 @@
 
 const fs = require('fs');
 const path = require('path');
-const project = path.join(__dirname, '../tsconfig.json');
-const dev = fs.existsSync(project) && !process.env.USE_DIST;
+const tsconfigPath = path.join(__dirname, '../tsconfig.json');
+const dev = fs.existsSync(tsconfigPath) && !process.env.USE_DIST;
 
 if (dev) {
-  require('ts-node').register({ project });
+  require('ts-node').register({ project: tsconfigPath });
+  const tsconfigModule = require(tsconfigPath);
+  require('tsconfig-paths').register({
+    baseUrl: path.dirname(tsconfigPath),
+    paths: tsconfigModule.compilerOptions.paths
+  });
 }
 
 require(`../${dev ? 'src' : 'dist'}`).run();
