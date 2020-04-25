@@ -8,7 +8,7 @@ import yaml from 'js-yaml';
 
 import { assertIsDefined } from '~/utils/assert';
 import { paths } from '~/paths';
-import { marked } from '~/marked';
+import { marked } from '~/utils/marked';
 import { options } from '~/cli';
 
 export const fsp = fs.promises;
