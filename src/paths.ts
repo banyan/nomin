@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const srcDirectory = fs.realpathSync(process.cwd());
-const resolvePath = (relativePath: string) =>
+const resolvePath = (relativePath: string): string =>
   path.resolve(srcDirectory, relativePath);
 
 export const paths = {

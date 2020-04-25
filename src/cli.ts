@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import meow from 'meow';
 
 export const cli = meow(

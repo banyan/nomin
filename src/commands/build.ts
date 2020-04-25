@@ -46,7 +46,7 @@ const parse = (entry: Entry): [string, Data] => {
   return [m[2], yaml.load(m[1])];
 };
 
-export const build = async () => {
+export const build = async (): Promise<void> => {
   let entries: Entry[] = [];
   const postPaths = await fsp.readdir(paths.posts);
   for (const postPath of postPaths) {
@@ -173,6 +173,7 @@ export const build = async () => {
   };
 
   buildArchive(archives);
+
   // copy static
   fse.copySync(paths.static, paths.public);
 };

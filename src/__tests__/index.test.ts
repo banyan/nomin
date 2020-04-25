@@ -3,6 +3,7 @@ import execa from 'execa';
 import fse, { pathExists } from 'fs-extra';
 import { format } from 'date-fns';
 import tempy from 'tempy';
+import assert from 'assert';
 
 describe('nomin', () => {
   const tmpDir = tempy.directory();
@@ -30,8 +31,8 @@ describe('nomin', () => {
       process.chdir(tmpDir);
       await fse.copy(fixtureDir, tmpDir);
       const { stdout, stderr } = await execa(bin);
-      expect(stdout).toEqual('');
-      expect(stderr).toEqual('');
+      assert(stdout === "");
+      assert(stderr === "");
     });
 
     describe('index.html', () => {

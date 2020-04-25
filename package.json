@@ -18,6 +18,7 @@
     "clearn": "rm -rf dist",
     "build": "tsc -p tsconfig.release.json",
     "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint --fix . --ext .ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "fmt": "prettier --write \"src/**/*.{js,ts,html}\" \"bin/run\""
