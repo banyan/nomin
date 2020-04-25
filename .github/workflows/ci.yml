@@ -18,8 +18,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - uses: bahmutov/npm-install@v1
-    - run: yarn lint --if-present
-    - run: yarn build --if-present
+    - run: yarn lint
+    - run: yarn build
     - run: yarn test
       env:
         CI: true
