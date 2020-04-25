@@ -1,0 +1,15 @@
+{
+  "settings": {
+    "eslint.enable": true,
+    "editor.codeActionsOnSaveTimeout": 2000,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.formatOnSave": false,
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.preferences.importModuleSpecifier": "non-relative"
+  },
+  "extensions": {
+    "recommendations": ["dbaeumer.vscode-eslint"]
+  }
+}
