@@ -39,7 +39,7 @@ export interface Archive {
   link: string;
 }
 
-export const parse = (entry: Entry): [string, Data] => {
+const parse = (entry: Entry): [string, Data] => {
   const data = fs.readFileSync(path.join(paths.posts, entry.path), 'utf8');
   const m = data.match(/^---([\s\S]*?)---([\s\S]*)$/m);
   if (!m) throw new Error(`parse failed: ${data}, ${m}`);
