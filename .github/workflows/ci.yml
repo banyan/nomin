@@ -2,6 +2,9 @@ name: CI
 
 on: [push]
 
+env:
+  TZ: 'Asia/Tokyo'
+
 jobs:
   build:
 
