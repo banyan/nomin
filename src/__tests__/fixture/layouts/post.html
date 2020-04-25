@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>{% if index != true %}{{ title }} - {% endif %}blog title</title>
+    <link
+      href="/atom.xml"
+      rel="alternate"
+      title="blog title"
+      type="application/atom+xml"
+    />
+  </head>
+
+  <body>
+    <div>
+      <header><a href="/archive">archive</a></header>
+      <h1>blog title</h1>
+      <div>
+        <div>
+          <h1 class="entry-title">{{ title }}</h1>
+        </div>
+
+        <div>
+          <span class="time">
+            <time>{{ formattedDate }}</time>
+          </span>
+          <div class="main-content">
+            {{ content }}
+          </div>
+        </div>
+
+        <div class="pagination">
+          {% if nextPage %}
+          <a href="{{ nextPage.link }}" rel="next">« earlier</a>
+          {% endif %} {% if prevPage %}
+          <a href="{{ prevPage.link }}">later »</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

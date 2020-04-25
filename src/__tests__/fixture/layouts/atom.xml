@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[blog title]]></title>
+  <link href="https://example.com/atom.xml" rel="self"/>
+  <link href="https://example.com/"/>
+  <updated>{{ feeds[0].date }}</updated>
+  <id>http://example.com</id>
+  <author>
+    <name><![CDATA[blog title]]></name>
+  </author>
+  <generator uri="https://github.com/banyan/nomin/">nomin</generator>
+
+{% for feed in feeds %}
+  <entry>
+    <title type="html"><![CDATA[{{ feed.title }}]]></title>
+    <link href="https://example.com{{ feed.link }}" />
+    <updated>{{ feed.date }}</updated>
+    <id>http://example.com{{ feed.link }}</id>
+    <content type="html"><![CDATA[
+{{ feed.content }}
+]]></content>
+  </entry>
+{% endfor %}
+
+</feed>

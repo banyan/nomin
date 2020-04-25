@@ -5,7 +5,9 @@ import { paths } from '~/paths';
 import { createPost } from '~/commands/new';
 
 describe('createPost', () => {
-  const spy = jest.spyOn(fs.promises, 'writeFile').mockImplementation(jest.fn());
+  const spy = jest
+    .spyOn(fs.promises, 'writeFile')
+    .mockImplementation(jest.fn());
   advanceTo(new Date(2020, 3, 25, 0, 0, 0)); // 3 is actually 4
 
   afterAll(() => {

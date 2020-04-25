@@ -1,0 +1,173 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nomin nomin archive/index.html creates archive/index.html 1`] = `
+"<html>
+  <head>
+    <title> - blog title</title>
+    <link
+      href=\\"/atom.xml\\"
+      rel=\\"alternate\\"
+      title=\\"blog title\\"
+      type=\\"application/atom+xml\\"
+    />
+  </head>
+
+  <body>
+    <div>
+      <header><a href=\\"/archive\\">archive</a></header>
+      <h1>blog title</h1>
+
+      <div>
+        
+        <ul>
+          <li>
+            <span class=\\"time\\">
+              <time>Apr 26th, 2020</time>
+            </span>
+            <span>
+              <a href=\\"/2020/04/26/1\\">foo</a>
+            </span>
+          </li>
+        </ul>
+        
+        <ul>
+          <li>
+            <span class=\\"time\\">
+              <time>Apr 25th, 2020</time>
+            </span>
+            <span>
+              <a href=\\"/2020/04/25/1\\">first post</a>
+            </span>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+  </body>
+</html>
+"
+`;
+
+exports[`nomin nomin atom.xml creates atom.xml 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
+<feed xmlns=\\"http://www.w3.org/2005/Atom\\">
+
+  <title><![CDATA[blog title]]></title>
+  <link href=\\"https://example.com/atom.xml\\" rel=\\"self\\"/>
+  <link href=\\"https://example.com/\\"/>
+  <id>http://example.com</id>
+  <author>
+    <name><![CDATA[blog title]]></name>
+  </author>
+  <generator uri=\\"https://github.com/banyan/nomin/\\">nomin</generator>
+
+
+  <entry>
+    <title type=\\"html\\"><![CDATA[foo]]></title>
+    <link href=\\"https://example.com/2020/04/26/1\\" />
+    <id>http://example.com/2020/04/26/1</id>
+    <content type=\\"html\\"><![CDATA[
+
+]]></content>
+  </entry>
+
+  <entry>
+    <title type=\\"html\\"><![CDATA[first post]]></title>
+    <link href=\\"https://example.com/2020/04/25/1\\" />
+    <id>http://example.com/2020/04/25/1</id>
+    <content type=\\"html\\"><![CDATA[
+
+
+hi, this is a first post.
+
+]]></content>
+  </entry>
+
+
+</feed>"
+`;
+
+exports[`nomin nomin index.html creates index.html 1`] = `
+"<html>
+  <head>
+    <title>blog title</title>
+    <link
+      href=\\"/atom.xml\\"
+      rel=\\"alternate\\"
+      title=\\"blog title\\"
+      type=\\"application/atom+xml\\"
+    />
+  </head>
+
+  <body>
+    <div>
+      <header><a href=\\"/archive\\">archive</a></header>
+      <h1>blog title</h1>
+      <div>
+        <div>
+          <h1 class=\\"entry-title\\">foo</h1>
+        </div>
+
+        <div>
+          <span class=\\"time\\">
+            <time>Apr 26th, 2020</time>
+          </span>
+          <div class=\\"main-content\\">
+            
+          </div>
+        </div>
+
+        <div class=\\"pagination\\">
+          
+          <a href=\\"/2020/04/25/1\\" rel=\\"next\\">« earlier</a>
+           
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+"
+`;
+
+exports[`nomin nomin post creates post html 1`] = `
+"<html>
+  <head>
+    <title>first post - blog title</title>
+    <link
+      href=\\"/atom.xml\\"
+      rel=\\"alternate\\"
+      title=\\"blog title\\"
+      type=\\"application/atom+xml\\"
+    />
+  </head>
+
+  <body>
+    <div>
+      <header><a href=\\"/archive\\">archive</a></header>
+      <h1>blog title</h1>
+      <div>
+        <div>
+          <h1 class=\\"entry-title\\">first post</h1>
+        </div>
+
+        <div>
+          <span class=\\"time\\">
+            <time>Apr 25th, 2020</time>
+          </span>
+          <div class=\\"main-content\\">
+            <p>hi, this is a first post.</p>
+
+          </div>
+        </div>
+
+        <div class=\\"pagination\\">
+           
+          <a href=\\"/2020/04/26/1\\">later »</a>
+          
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+"
+`;
