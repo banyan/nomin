@@ -16,7 +16,7 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "yarn clean && tsc -p tsconfig.release.json",
+    "build": "yarn clean && ttsc -p tsconfig.release.json",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix . --ext .ts",
     "test": "jest",
@@ -42,6 +42,7 @@
     "@types/node": "~12.12.27",
     "@typescript-eslint/eslint-plugin": "~2.19.2",
     "@typescript-eslint/parser": "~2.19.2",
+    "@zerollup/ts-transform-paths": "^1.7.17",
     "eslint": "~6.8.0",
     "eslint-config-prettier": "~6.10.0",
     "eslint-plugin-jest": "~23.7.0",
@@ -53,6 +54,7 @@
     "ts-jest": "~25.2.0",
     "ts-node": "^8.8.2",
     "tsconfig-paths": "^3.9.0",
+    "ttypescript": "^1.5.10",
     "typescript": "^3.8.3"
   },
   "jest": {
