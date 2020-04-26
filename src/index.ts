@@ -13,7 +13,11 @@ export const run = async (): Promise<void> => {
     process.exit(0);
   }
 
-  if (cli.input[0] === 'new' && cli.input.length === 2) {
+  if (cli.input[0] === 'new') {
+    if (cli.input[0] === 'new' && cli.input.length !== 2) {
+      console.log('nomin new requires title');
+      process.exit(1);
+    }
     await createPost(cli.input[1]);
     process.exit(0);
   }

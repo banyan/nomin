@@ -24,6 +24,17 @@ describe('nomin', () => {
       )}-${title}.md`;
       expect(await pathExists(expectedFile)).toEqual(true);
     });
+
+    it('shows a message if title is missing and returns exit code as 1', async () => {
+      process.chdir(tmpDir);
+      await fse.copy(fixtureDir, tmpDir);
+      try {
+        await expect(await execa(bin, ['new'])).rejects.toThrow();
+      } catch (err) {
+        // eslint-disable-next-line jest/no-try-expect
+        expect(err.stdout).toMatchInlineSnapshot(`"nomin new requires title"`);
+      }
+    });
   });
 
   describe('nomin', () => {
@@ -31,8 +42,8 @@ describe('nomin', () => {
       process.chdir(tmpDir);
       await fse.copy(fixtureDir, tmpDir);
       const { stdout, stderr } = await execa(bin);
-      assert(stdout === "");
-      assert(stderr === "");
+      assert(stdout === '');
+      assert(stderr === '');
     });
 
     describe('index.html', () => {
