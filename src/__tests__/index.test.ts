@@ -23,6 +23,7 @@ describe('nomin', () => {
         'yyyy-MM-dd',
       )}-${title}.md`;
       expect(await pathExists(expectedFile)).toEqual(true);
+      await fse.remove(expectedFile);
     });
 
     it('shows a message if title is missing and returns exit code as 1', async () => {
@@ -56,8 +57,15 @@ describe('nomin', () => {
     });
 
     describe('post', () => {
-      it('creates post html', async () => {
+      it('creates html with permalink if permalink is given', async () => {
         const expectedFile = `${tmpDir}/public/2020/04/25/1/index.html`;
+        expect(await pathExists(expectedFile)).toEqual(true);
+        const post = fse.readFileSync(expectedFile, 'utf8');
+        expect(post).toMatchSnapshot();
+      });
+
+      it('creates html with title if permalink is not given', async () => {
+        const expectedFile = `${tmpDir}/public/posts/second-post-without-permalink/index.html`;
         expect(await pathExists(expectedFile)).toEqual(true);
         const post = fse.readFileSync(expectedFile, 'utf8');
         expect(post).toMatchSnapshot();
