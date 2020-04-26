@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import fse from 'fs-extra';
-import { compareAsc, format, formatRFC3339 } from 'date-fns';
-import readline from 'readline';
+import { compareDesc, format, formatRFC3339 } from 'date-fns';
 import { Liquid } from 'liquidjs';
 import yaml from 'js-yaml';
 
@@ -17,163 +16,160 @@ export const engine = new Liquid();
 export interface Entry {
   path: string;
   date: Date;
-  cnt?: number;
-  link?: string;
+  formattedDate: string;
+  link: string;
+  title: string;
+  content: string;
 }
 
 interface Data {
   title: string;
   date: string;
+  permalink?: string;
 }
 
-export interface Feed {
+interface Feed {
   title: string;
   date: string;
   link: string;
   content: string;
 }
 
-export interface Archive {
+interface Archive {
   title: string;
   formattedDate: string;
   link: string;
 }
 
-const parse = (entry: Entry): [string, Data] => {
-  const data = fs.readFileSync(path.join(paths.posts, entry.path), 'utf8');
+const parse = (postPath: string): [string, Data] => {
+  const data = fs.readFileSync(path.join(paths.posts, postPath), 'utf8');
   const m = data.match(/^---([\s\S]*?)---([\s\S]*)$/m);
-  if (!m) throw new Error(`parse failed: ${data}, ${m}`);
+  assertIsDefined(m);
   return [m[2], yaml.load(m[1])];
 };
 
-export const build = async (): Promise<void> => {
-  let entries: Entry[] = [];
-  const postPaths = await fsp.readdir(paths.posts);
-  for (const postPath of postPaths) {
-    const fileStream = fs.createReadStream(path.join(paths.posts, postPath));
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity,
+const normalizeLink = (s: string): string => {
+  const regexp = /^[\d]{4}-[\d]{2}-[\d]{2}-(.*)\.md$/;
+  const m = s.match(regexp);
+  assertIsDefined(m);
+  return path.join(options.basePath, m[1]);
+};
+
+const buildPost = async (
+  entry: Entry & { nextPage: Entry | null; prevPage: Entry | null },
+): Promise<void> => {
+  const layout = await fsp.readFile(
+    path.join(paths.layouts, 'post.html'),
+    'utf8',
+  );
+  const tpl = engine.parse(layout);
+  const html = await engine.render(tpl, entry);
+  const outDir = path.join(paths.public, entry.link);
+  const exists = await fse.pathExists(outDir);
+  if (!exists) await fse.mkdirp(outDir);
+  await fsp.writeFile(path.join(outDir, 'index.html'), html);
+};
+
+const buildIndex = async (entry: Entry): Promise<void> => {
+  const layout = await fsp.readFile(
+    path.join(paths.layouts, 'post.html'),
+    'utf8',
+  );
+  const tpl = engine.parse(layout);
+  const html = await engine.render(tpl, {
+    ...entry,
+    index: true,
+  });
+  await fsp.writeFile(path.join(paths.public, 'index.html'), html);
+};
+
+const buildFeed = async (feeds: Feed[]): Promise<void> => {
+  const layout = await fsp.readFile(
+    path.join(paths.layouts, 'atom.xml'),
+    'utf8',
+  );
+  const tpl = engine.parse(layout);
+  const html = await engine.render(tpl, { feeds });
+  await fsp.writeFile(path.join(paths.public, 'atom.xml'), html);
+};
+
+const buildArchive = async (archives: Archive[]): Promise<void> => {
+  const layout = await fsp.readFile(
+    path.join(paths.layouts, 'archive.html'),
+    'utf8',
+  );
+  const tpl = engine.parse(layout);
+  const html = await engine.render(tpl, { archives });
+  await fse.mkdirp(paths.archive);
+  await fsp.writeFile(path.join(paths.archive, 'index.html'), html);
+};
+
+const buildPosts = (
+  entries: Entry[],
+  pos: number,
+  feeds: Feed[],
+  archives: Archive[],
+): void => {
+  for (const entry of entries) {
+    const nextPage = pos < entries.length - 1 ? entries[pos + 1] : null;
+    const prevPage = pos > 0 ? entries[pos - 1] : null;
+
+    buildPost({
+      ...entry,
+      nextPage,
+      prevPage,
     });
-    for await (const line of rl) {
-      const m = line.match(/^date: (.+)$/);
-      if (m) {
-        entries.push({ path: postPath, date: new Date(m[1]) });
-        break;
-      }
-    }
-  }
-  entries = entries.sort((a: Entry, b: Entry) => compareAsc(a.date, b.date));
-  let preEntryDate = '0000/00/00';
-  let cnt = 1;
-  for (const entry of entries) {
-    assertIsDefined(entry.date);
-    const date = format(entry.date, 'yyyy/MM/dd');
-    if (preEntryDate === date) {
-      cnt = cnt + 1;
-    } else {
-      cnt = 1;
-    }
-    entry.cnt = cnt;
-    entry.link = path.join(options.basePath, date, `${cnt}`);
-    preEntryDate = date;
-  }
-  let pos = 0;
-  const feeds: Feed[] = [];
-  const archives: Archive[] = [];
-  entries = entries.reverse();
-  for (const entry of entries) {
-    const [content, data] = parse(entry);
-    let nextPage = undefined;
-    let prevPage = undefined;
-    if (pos < entries.length - 1) {
-      nextPage = entries[pos + 1];
-    }
-    if (pos > 0) {
-      prevPage = entries[pos - 1];
-    }
-    const props = {
-      index: false,
-      title: data.title,
-      link: entry.link,
-      date: entry.date,
-      formattedDate: format(entry.date, 'MMM do, yyyy'),
-      content: marked(content),
-      nextPage: nextPage,
-      prevPage: prevPage,
-    };
-    const buildPost = async (entry: Entry): Promise<void> => {
-      const layout = fs.readFileSync(
-        path.join(paths.layouts, 'post.html'),
-        'utf8',
-      );
-      const tpl = engine.parse(layout);
-      const html = await engine.render(tpl, props);
-      assertIsDefined(entry.link);
-      const outDir = path.join(paths.public, entry.link);
-      const exists = await fse.pathExists(outDir);
-      if (!exists) await fse.mkdirp(outDir);
-      await fsp.writeFile(path.join(outDir, 'index.html'), html);
-    };
-    buildPost(entry);
-    assertIsDefined(entry.link); // TODO: remove this
+
     if (pos < options.feedSize) {
       feeds.push({
-        title: data.title,
-        content,
+        title: entry.title,
+        content: entry.content,
         date: formatRFC3339(entry.date),
         link: entry.link,
       });
     }
+
     if (options.archive) {
       archives.push({
-        title: data.title,
-        formattedDate: format(entry.date, 'MMM do, yyyy'),
+        title: entry.title,
+        formattedDate: entry.formattedDate,
         link: entry.link,
       });
     }
-    const buildIndex = async (): Promise<void> => {
-      props.index = true;
-      const layout = fs.readFileSync(
-        path.join(paths.layouts, 'post.html'),
-        'utf8',
-      );
-      const tpl = engine.parse(layout);
-      const html = await engine.render(tpl, props);
-      await fsp.writeFile(path.join(paths.public, 'index.html'), html);
-    };
+
     if (pos === 0) {
-      buildIndex();
+      buildIndex(entry);
     }
+
     pos++;
   }
+};
 
-  const buildFeed = async (feeds: Feed[]): Promise<void> => {
-    const layout = fs.readFileSync(
-      path.join(paths.layouts, 'atom.xml'),
-      'utf8',
-    );
-    const tpl = engine.parse(layout);
-    const html = await engine.render(tpl, { feeds });
-    await fsp.writeFile(path.join(paths.public, 'atom.xml'), html);
-  };
+export const build = async (): Promise<void> => {
+  const postPaths = await fsp.readdir(paths.posts);
 
+  const pos = 0;
+  const feeds: Feed[] = [];
+  const archives: Archive[] = [];
+
+  const entries: Entry[] = postPaths
+    .filter((postPath) => path.extname(postPath) === '.md')
+    .map((postPath) => {
+      const [content, data] = parse(postPath);
+      const date = new Date(data.date);
+      return {
+        path: postPath,
+        date,
+        formattedDate: format(date, 'MMM do, yyyy'),
+        link: data.permalink || normalizeLink(postPath),
+        title: data.title,
+        content: marked(content),
+      };
+    })
+    .sort((a: Entry, b: Entry) => compareDesc(a.date, b.date));
+
+  buildPosts(entries, pos, feeds, archives);
   buildFeed(feeds);
-
-  const buildArchive = async (archives: Archive[]): Promise<void> => {
-    const layout = fs.readFileSync(
-      path.join(paths.layouts, 'archive.html'),
-      'utf8',
-    );
-    const tpl = engine.parse(layout);
-    const html = await engine.render(tpl, { archives });
-    const archiveDir = path.join(paths.public, 'archive');
-    await fse.mkdirp(archiveDir);
-    await fsp.writeFile(path.join(archiveDir, 'index.html'), html);
-  };
-
-  buildArchive(archives);
-
-  // copy static
-  fse.copySync(paths.static, paths.public);
+  if (options.archive) buildArchive(archives);
+  fse.copySync(paths.static, paths.public); // copy static
 };

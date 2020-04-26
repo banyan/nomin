@@ -9,5 +9,6 @@ export const paths = {
   posts: resolvePath('./posts'),
   layouts: resolvePath('./layouts'),
   public: resolvePath('./public'),
+  archive: resolvePath('./public/archive'),
   static: resolvePath('./static'),
 };
