@@ -70,7 +70,7 @@ const buildPost = async (
   await fsp.writeFile(path.join(outDir, 'index.html'), html);
 };
 
-const buildIndex = async (entry: Entry): Promise<void> => {
+const buildIndex = async (entry: Entry & { nextPage: Entry | null; }): Promise<void> => {
   const layout = await fsp.readFile(
     path.join(paths.layouts, 'post.html'),
     'utf8',
@@ -138,7 +138,10 @@ const buildPosts = (
     }
 
     if (pos === 0) {
-      buildIndex(entry);
+      buildIndex({
+        ...entry,
+        nextPage,
+      });
     }
 
     pos++;

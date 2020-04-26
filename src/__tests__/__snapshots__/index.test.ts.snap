@@ -118,6 +118,8 @@ exports[`nomin nomin index.html creates index.html 1`] = `
         </div>
 
         <div class=\\"pagination\\">
+          
+          <a href=\\"/2020/04/25/1\\" rel=\\"next\\">« earlier</a>
            
         </div>
       </div>
