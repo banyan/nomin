@@ -34,7 +34,7 @@ export const cli = meow(
       },
       base_path: {
         type: 'string',
-        default: '/',
+        default: '/posts',
       },
       feed_size: {
         type: 'number',
