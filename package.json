@@ -15,8 +15,8 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "clearn": "rm -rf dist",
-    "build": "tsc -p tsconfig.release.json",
+    "clean": "rm -rf dist",
+    "build": "yarn clean && tsc -p tsconfig.release.json",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix . --ext .ts",
     "test": "jest",
