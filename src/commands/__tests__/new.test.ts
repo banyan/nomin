@@ -15,15 +15,15 @@ describe('createPost', () => {
   });
 
   it('creates new post', async () => {
-    const title = 'foo';
+    const title = 'foo/bar';
     await createPost(title);
     expect(spy).toHaveBeenCalled();
     expect(spy.mock.calls[0][0]).toEqual(
-      `${paths.posts}/2020-04-25-${title}.md`,
+      `${paths.posts}/2020-04-25-${'foo-bar'}.md`,
     );
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
       "---
-      title: foo
+      title: foo-bar
       date: 2020-04-25T00:00:00+09:00
       ---"
     `);
